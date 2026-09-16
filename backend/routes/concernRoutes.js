@@ -1,0 +1,13 @@
+const express = require('express');
+const { body, param } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const controller = require('../controllers/concernController');
+const validate = require('../middleware/validateMiddleware');
+const router = express.Router();
+router.use(protect);
+router.post('/', [body('title').trim().notEmpty(), body('description').trim().notEmpty()], validate, controller.createConcern);
+router.get('/student/:studentId', param('studentId').isMongoId(), validate, controller.listStudentConcerns);
+router.get('/mentor/:mentorId', param('mentorId').isMongoId(), validate, controller.listMentorConcerns);
+router.get('/:id', param('id').isMongoId(), validate, controller.getConcern);
+router.put('/:id', [param('id').isMongoId(), body('status').optional().isIn(['open', 'in_progress', 'resolved'])], validate, controller.updateConcern);
+module.exports = router;

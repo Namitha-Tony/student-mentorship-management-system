@@ -1,0 +1,15 @@
+const express = require('express');
+const { body, param } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const controller = require('../controllers/meetingController');
+const validate = require('../middleware/validateMiddleware');
+const router = express.Router();
+router.use(protect);
+const meetingValidation = [body('date').isISO8601(), body('startTime').matches(/^([01]\d|2[0-3]):[0-5]\d$/), body('endTime').matches(/^([01]\d|2[0-3]):[0-5]\d$/), body('type').isIn(['academic', 'career', 'personal', 'other']), body('purpose').trim().notEmpty()];
+router.post('/', meetingValidation, validate, controller.createMeeting);
+router.get('/student/:studentId', param('studentId').isMongoId(), validate, controller.listStudentMeetings);
+router.get('/mentor/:mentorId', param('mentorId').isMongoId(), validate, controller.listMentorMeetings);
+router.get('/:id', param('id').isMongoId(), validate, controller.getMeeting);
+router.put('/:id', param('id').isMongoId(), validate, controller.updateMeeting);
+router.delete('/:id', param('id').isMongoId(), validate, controller.deleteMeeting);
+module.exports = router;

@@ -1,0 +1,14 @@
+const express = require('express');
+const { body, param } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const authorizeRoles = require('../middleware/roleMiddleware');
+const controller = require('../controllers/feedbackController');
+const validate = require('../middleware/validateMiddleware');
+const router = express.Router();
+router.use(protect);
+router.post('/', [body('student').isMongoId(), body('rating').isFloat({ min: 1, max: 5 })], validate, authorizeRoles('mentor'), controller.createFeedback);
+router.get('/student/:studentId', param('studentId').isMongoId(), validate, controller.listStudentFeedback);
+router.get('/mentor/:mentorId', param('mentorId').isMongoId(), validate, controller.listMentorFeedback);
+router.get('/:id', param('id').isMongoId(), validate, controller.getFeedback);
+router.put('/:id', [param('id').isMongoId(), body('rating').optional().isFloat({ min: 1, max: 5 })], validate, authorizeRoles('mentor'), controller.updateFeedback);
+module.exports = router;

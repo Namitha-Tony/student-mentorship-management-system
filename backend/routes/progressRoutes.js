@@ -1,0 +1,11 @@
+const express = require('express');
+const { param, body } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const authorizeRoles = require('../middleware/roleMiddleware');
+const controller = require('../controllers/progressController');
+const validate = require('../middleware/validateMiddleware');
+const router = express.Router();
+router.use(protect);
+router.get('/student/:studentId', param('studentId').isMongoId(), validate, controller.getProgress);
+router.put('/student/:studentId', [param('studentId').isMongoId(), body('academicProgress').optional().isFloat({ min: 0, max: 100 }), body('attendancePercentage').optional().isFloat({ min: 0, max: 100 }), body('goalCompletionPercentage').optional().isFloat({ min: 0, max: 100 }), body('overallProgress').optional().isFloat({ min: 0, max: 100 })], validate, authorizeRoles('mentor'), controller.updateProgress);
+module.exports = router;
