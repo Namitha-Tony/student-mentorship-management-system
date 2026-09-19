@@ -1,0 +1,7 @@
+const Progress = require('../models/Progress');
+const Student = require('../models/Student');
+const Mentor = require('../models/Mentor');
+const asyncHandler = require('../utils/asyncHandler');
+const getProgress = asyncHandler(async (req, res) => { const student = await Student.findById(req.params.studentId); if (!student) return res.status(404).json({ success: false, message: 'Student not found' }); const allowed = req.user.role === 'student' ? String(student.user) === String(req.user._id) : String((await Mentor.findOne({ user: req.user._id }))?._id) === String(student.mentor); if (!allowed) return res.status(403).json({ success: false, message: 'You cannot access this progress record' }); res.json({ success: true, data: await Progress.findOne({ student: student._id }).populate('updatedBy', 'name email') }); });
+const updateProgress = asyncHandler(async (req, res) => { const student = await Student.findById(req.params.studentId); const mentor = await Mentor.findOne({ user: req.user._id }); if (!student || !mentor || String(student.mentor) !== String(mentor._id)) return res.status(403).json({ success: false, message: 'You can only update assigned students' }); const progress = await Progress.findOneAndUpdate({ student: student._id }, { ...req.body, student: student._id, updatedBy: req.user._id }, { new: true, upsert: true, runValidators: true }); res.json({ success: true, message: 'Progress updated successfully', data: progress }); });
+module.exports = { getProgress, updateProgress };

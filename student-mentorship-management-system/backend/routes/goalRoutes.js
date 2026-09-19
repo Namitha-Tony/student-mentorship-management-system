@@ -1,0 +1,15 @@
+const express = require('express');
+const { body, param } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const authorizeRoles = require('../middleware/roleMiddleware');
+const controller = require('../controllers/goalController');
+const validate = require('../middleware/validateMiddleware');
+const router = express.Router();
+const goalFields = [body('title').trim().notEmpty(), body('deadline').isISO8601(), body('status').optional().isIn(['not_started', 'in_progress', 'completed']), body('progressPercentage').optional().isFloat({ min: 0, max: 100 })];
+router.use(protect);
+router.post('/', goalFields, validate, authorizeRoles('student'), controller.createGoal);
+router.get('/student/:studentId', param('studentId').isMongoId(), validate, controller.listStudentGoals);
+router.get('/:id', param('id').isMongoId(), validate, controller.getGoal);
+router.put('/:id', [param('id').isMongoId(), ...goalFields], validate, authorizeRoles('student'), controller.updateGoal);
+router.delete('/:id', param('id').isMongoId(), validate, authorizeRoles('student'), controller.deleteGoal);
+module.exports = router;
