@@ -4,17 +4,14 @@ import Sidebar from '../components/Sidebar';
 import Card from '../components/Card';
 import { useAuth } from '../context/AuthContext';
 
-function Goals() {
+function Concerns() {
   const { token } = useAuth();
 
   const [student, setStudent] = useState(null);
-  const [goals, setGoals] = useState([]);
+  const [concerns, setConcerns] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [deadline, setDeadline] = useState('');
-  const [status, setStatus] = useState('not_started');
-  const [progressPercentage, setProgressPercentage] = useState(0);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -48,10 +45,10 @@ function Goals() {
   }, [token]);
 
   useEffect(() => {
-    const getGoals = async () => {
+    const getConcerns = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/goals/student/${student._id}`,
+          `http://localhost:5000/api/concerns/student/${student._id}`,
           {
             method: 'GET',
             headers: {
@@ -63,9 +60,9 @@ function Goals() {
         const data = await response.json();
 
         if (response.ok) {
-          setGoals(data.data);
+          setConcerns(data.data);
         } else {
-          setMessage(data.message || 'Failed to load goals');
+          setMessage(data.message || 'Failed to load concerns');
         }
       } catch {
         setMessage('Cannot connect to server');
@@ -73,7 +70,7 @@ function Goals() {
     };
 
     if (token && student) {
-      getGoals();
+      getConcerns();
     }
   }, [token, student]);
 
@@ -83,7 +80,7 @@ function Goals() {
 
     try {
       const response = await fetch(
-        'http://localhost:5000/api/goals',
+        'http://localhost:5000/api/concerns',
         {
           method: 'POST',
           headers: {
@@ -93,10 +90,7 @@ function Goals() {
           body: JSON.stringify({
             title,
             description,
-            category,
-            deadline,
-            status,
-            progressPercentage: Number(progressPercentage)
+            category
           })
         }
       );
@@ -104,16 +98,13 @@ function Goals() {
       const data = await response.json();
 
       if (response.ok) {
-        setGoals((current) => [...current, data.data]);
+        setConcerns((current) => [data.data, ...current]);
         setTitle('');
         setDescription('');
         setCategory('');
-        setDeadline('');
-        setStatus('not_started');
-        setProgressPercentage(0);
-        setMessage('Goal created successfully');
+        setMessage('Concern submitted successfully');
       } else {
-        setMessage(data.message || 'Failed to create goal');
+        setMessage(data.message || 'Failed to submit concern');
       }
     } catch {
       setMessage('Cannot connect to server');
@@ -123,15 +114,16 @@ function Goals() {
   return (
     <div>
       <Navbar />
+
       <div className="dashboard-content">
         <Sidebar />
 
         <main>
-          <h1>My Goals</h1>
+          <h1>My Concerns</h1>
 
           {message && <p>{message}</p>}
 
-          <Card title="Create a Goal">
+          <Card title="Submit a Concern">
             <form onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="title">Title</label>
@@ -149,7 +141,10 @@ function Goals() {
                 <textarea
                   id="description"
                   value={description}
-                  onChange={(event) => setDescription(event.target.value)}
+                  onChange={(event) =>
+                    setDescription(event.target.value)
+                  }
+                  required
                 />
               </div>
 
@@ -159,83 +154,48 @@ function Goals() {
                   id="category"
                   type="text"
                   value={category}
-                  onChange={(event) => setCategory(event.target.value)}
+                  onChange={(event) =>
+                    setCategory(event.target.value)
+                  }
                 />
               </div>
 
-              <div>
-                <label htmlFor="deadline">Deadline</label>
-                <input
-                  id="deadline"
-                  type="date"
-                  value={deadline}
-                  onChange={(event) => setDeadline(event.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="status">Status</label>
-                <select
-                  id="status"
-                  value={status}
-                  onChange={(event) => setStatus(event.target.value)}
-                >
-                  <option value="not_started">Not Started</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="progressPercentage">
-                  Progress Percentage
-                </label>
-                <input
-                  id="progressPercentage"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={progressPercentage}
-                  onChange={(event) => setProgressPercentage(event.target.value)}
-                />
-              </div>
-
-              <button type="submit">Add Goal</button>
+              <button type="submit">Submit Concern</button>
             </form>
           </Card>
 
-          <h2>My Goals</h2>
+          <h2>Previous Concerns</h2>
 
-          {student && goals.length === 0 && (
-            <Card title="My Goals">
-              <p>You have not created any goals yet.</p>
+          {student && concerns.length === 0 && (
+            <Card title="Previous Concerns">
+              <p>You have not submitted any concerns yet.</p>
             </Card>
           )}
 
-          {goals.map((goal) => (
-            <Card key={goal._id} title={goal.title}>
+          {concerns.map((concern) => (
+            <Card key={concern._id} title={concern.title}>
               <p>
                 <strong>Description:</strong>{' '}
-                {goal.description || 'Not provided'}
+                {concern.description}
               </p>
 
               <p>
                 <strong>Category:</strong>{' '}
-                {goal.category || 'Not specified'}
+                {concern.category || 'Not specified'}
               </p>
 
               <p>
-                <strong>Deadline:</strong>{' '}
-                {new Date(goal.deadline).toLocaleDateString()}
+                <strong>Status:</strong> {concern.status}
               </p>
 
               <p>
-                <strong>Status:</strong> {goal.status}
+                <strong>Mentor Response:</strong>{' '}
+                {concern.mentorResponse || 'No response yet'}
               </p>
 
               <p>
-                <strong>Progress:</strong> {goal.progressPercentage}%
+                <strong>Submitted:</strong>{' '}
+                {new Date(concern.createdAt).toLocaleDateString()}
               </p>
             </Card>
           ))}
@@ -245,4 +205,4 @@ function Goals() {
   );
 }
 
-export default Goals;
+export default Concerns;

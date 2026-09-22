@@ -41,7 +41,9 @@ function Sidebar() {
       <NavLink to="/goals">
         Goals
       </NavLink>
-
+{user.role === 'student' && (
+  <NavLink to="/concerns">Concerns</NavLink>
+)}
       <NavLink to="/meetings">
         Meetings
       </NavLink>
