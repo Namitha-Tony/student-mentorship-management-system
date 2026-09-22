@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import Card from '../components/Card';
 import { useAuth } from '../context/AuthContext';
 
 function Concerns() {
@@ -110,99 +109,111 @@ function Concerns() {
       setMessage('Cannot connect to server');
     }
   };
+return (
+  <div>
+    <Navbar />
 
-  return (
-    <div>
-      <Navbar />
+    <div className="dashboard-content">
+      <Sidebar />
 
-      <div className="dashboard-content">
-        <Sidebar />
+      <main className="concern-page">
+        <h1>My Concerns</h1>
 
-        <main>
-          <h1>My Concerns</h1>
+        {message && (
+          <p className="page-message">
+            {message}
+          </p>
+        )}
 
-          {message && <p>{message}</p>}
+        <section className="concern-form-card">
+          <h2>Submit a Concern</h2>
 
-          <Card title="Submit a Concern">
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="title">Title</label>
-                <input
-                  id="title"
-                  type="text"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  required
-                />
-              </div>
+          <form className="concern-form" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="title">Title</label>
+              <input
+                id="title"
+                type="text"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Enter your concern"
+                required
+              />
+            </div>
 
-              <div>
-                <label htmlFor="description">Description</label>
-                <textarea
-                  id="description"
-                  value={description}
-                  onChange={(event) =>
-                    setDescription(event.target.value)
-                  }
-                  required
-                />
-              </div>
+            <div>
+              <label htmlFor="category">Category</label>
+              <input
+                id="category"
+                type="text"
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                placeholder="Academic, Career, Personal..."
+              />
+            </div>
 
-              <div>
-                <label htmlFor="category">Category</label>
-                <input
-                  id="category"
-                  type="text"
-                  value={category}
-                  onChange={(event) =>
-                    setCategory(event.target.value)
-                  }
-                />
-              </div>
+            <div>
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Describe your concern..."
+                required
+              />
+            </div>
 
-              <button type="submit">Submit Concern</button>
-            </form>
-          </Card>
+            <button type="submit">Submit Concern</button>
+          </form>
+        </section>
 
-          <h2>Previous Concerns</h2>
+        <h2 className="concern-section-title">
+          Previous Concerns
+        </h2>
 
-          {student && concerns.length === 0 && (
-            <Card title="Previous Concerns">
-              <p>You have not submitted any concerns yet.</p>
-            </Card>
-          )}
+        {student && concerns.length === 0 && (
+          <div className="concern-card">
+            <p>You have not submitted any concerns yet.</p>
+          </div>
+        )}
 
-          {concerns.map((concern) => (
-            <Card key={concern._id} title={concern.title}>
-              <p>
-                <strong>Description:</strong>{' '}
-                {concern.description}
-              </p>
+        {concerns.map((concern) => (
+          <div className="concern-card" key={concern._id}>
+            <h3>{concern.title}</h3>
 
-              <p>
-                <strong>Category:</strong>{' '}
-                {concern.category || 'Not specified'}
-              </p>
+            <p>
+              <strong>Description:</strong>{' '}
+              {concern.description}
+            </p>
 
-              <p>
-                <strong>Status:</strong> {concern.status}
-              </p>
+            <p>
+              <strong>Category:</strong>{' '}
+              {concern.category || 'Not specified'}
+            </p>
 
-              <p>
-                <strong>Mentor Response:</strong>{' '}
-                {concern.mentorResponse || 'No response yet'}
-              </p>
+            <p>
+              <strong>Status:</strong>{' '}
+              <span className="status-badge">
+                {concern.status}
+              </span>
+            </p>
 
-              <p>
-                <strong>Submitted:</strong>{' '}
-                {new Date(concern.createdAt).toLocaleDateString()}
-              </p>
-            </Card>
-          ))}
-        </main>
-      </div>
+            <p>
+              <strong>Mentor Response:</strong>{' '}
+              {concern.mentorResponse || 'No response yet'}
+            </p>
+
+            <p>
+              <strong>Submitted:</strong>{' '}
+              {new Date(concern.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        ))}
+      </main>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Concerns;

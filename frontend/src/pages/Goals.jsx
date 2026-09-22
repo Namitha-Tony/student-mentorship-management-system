@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import Card from '../components/Card';
 import { useAuth } from '../context/AuthContext';
 
 function Goals() {
@@ -121,18 +120,26 @@ function Goals() {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="dashboard-content">
-        <Sidebar />
+  <div>
+    <Navbar />
 
-        <main>
-          <h1>My Goals</h1>
+    <div className="dashboard-content">
+      <Sidebar />
 
-          {message && <p>{message}</p>}
+      <main className="goal-page">
+        <h1>My Goals</h1>
 
-          <Card title="Create a Goal">
-            <form onSubmit={handleSubmit}>
+        {message && (
+          <p className="page-message">
+            {message}
+          </p>
+        )}
+
+        <section className="goal-form-card">
+          <h2>Create a Goal</h2>
+
+          <form className="goal-form" onSubmit={handleSubmit}>
+            <div className="goal-form-grid">
               <div>
                 <label htmlFor="title">Title</label>
                 <input
@@ -140,16 +147,8 @@ function Goals() {
                   type="text"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
+                  placeholder="Enter your goal"
                   required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="description">Description</label>
-                <textarea
-                  id="description"
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
                 />
               </div>
 
@@ -160,6 +159,7 @@ function Goals() {
                   type="text"
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
+                  placeholder="Academic, Career, Personal..."
                 />
               </div>
 
@@ -197,51 +197,70 @@ function Goals() {
                   min="0"
                   max="100"
                   value={progressPercentage}
-                  onChange={(event) => setProgressPercentage(event.target.value)}
+                  onChange={(event) =>
+                    setProgressPercentage(event.target.value)
+                  }
                 />
               </div>
+            </div>
 
-              <button type="submit">Add Goal</button>
-            </form>
-          </Card>
+            <div>
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Describe your goal..."
+              />
+            </div>
 
-          <h2>My Goals</h2>
+            <button type="submit">Add Goal</button>
+          </form>
+        </section>
 
-          {student && goals.length === 0 && (
-            <Card title="My Goals">
-              <p>You have not created any goals yet.</p>
-            </Card>
-          )}
+        <h2 className="goal-section-title">My Goals</h2>
 
-          {goals.map((goal) => (
-            <Card key={goal._id} title={goal.title}>
-              <p>
-                <strong>Description:</strong>{' '}
-                {goal.description || 'Not provided'}
-              </p>
+        {student && goals.length === 0 && (
+          <div className="goal-card">
+            <p>You have not created any goals yet.</p>
+          </div>
+        )}
 
-              <p>
-                <strong>Category:</strong>{' '}
-                {goal.category || 'Not specified'}
-              </p>
+        {goals.map((goal) => (
+          <div className="goal-card" key={goal._id}>
+            <h3>{goal.title}</h3>
 
-              <p>
-                <strong>Deadline:</strong>{' '}
-                {new Date(goal.deadline).toLocaleDateString()}
-              </p>
+            <p>
+              <strong>Description:</strong>{' '}
+              {goal.description || 'Not provided'}
+            </p>
 
-              <p>
-                <strong>Status:</strong> {goal.status}
-              </p>
+            <p>
+              <strong>Category:</strong>{' '}
+              {goal.category || 'Not specified'}
+            </p>
 
-              <p>
-                <strong>Progress:</strong> {goal.progressPercentage}%
-              </p>
-            </Card>
-          ))}
-        </main>
-      </div>
+            <p>
+              <strong>Deadline:</strong>{' '}
+              {new Date(goal.deadline).toLocaleDateString()}
+            </p>
+
+            <p>
+              <strong>Status:</strong>{' '}
+              <span className="status-badge">
+                {goal.status}
+              </span>
+            </p>
+
+            <p>
+              <strong>Progress:</strong>{' '}
+              {goal.progressPercentage}%
+            </p>
+          </div>
+        ))}
+      </main>
     </div>
+  </div>
   );
 }
 
