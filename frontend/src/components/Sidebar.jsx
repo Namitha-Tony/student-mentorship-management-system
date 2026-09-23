@@ -56,6 +56,10 @@ function Sidebar() {
   Feedback
 </NavLink>
 
+<NavLink to="/notifications">
+  Notifications
+</NavLink>
+
 
     </aside>
   );

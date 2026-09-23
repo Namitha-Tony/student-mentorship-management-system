@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 function Progress() {
   const { token, user } = useAuth();
+
   const [student, setStudent] = useState(null);
   const [progress, setProgress] = useState(null);
   const [message, setMessage] = useState('');
@@ -16,7 +17,6 @@ function Progress() {
         const studentResponse = await fetch(
           'http://localhost:5000/api/students/me',
           {
-            method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -37,7 +37,6 @@ function Progress() {
         const progressResponse = await fetch(
           `http://localhost:5000/api/progress/student/${studentData.data._id}`,
           {
-            method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -63,6 +62,29 @@ function Progress() {
     }
   }, [token, user]);
 
+  const ProgressBar = ({ label, value }) => {
+    const percentage = Math.min(
+      100,
+      Math.max(0, Number(value) || 0)
+    );
+
+    return (
+      <div className="progress-item">
+        <div className="progress-label">
+          <strong>{label}</strong>
+          <span>{percentage}%</span>
+        </div>
+
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <Navbar />
@@ -71,46 +93,105 @@ function Progress() {
         <Sidebar />
 
         <main>
-          <h1>Progress Overview</h1>
+          <div className="page-header">
+            <div>
+              <h1>Progress Overview</h1>
+              <p>
+                Track your academic and mentorship progress.
+              </p>
+            </div>
+          </div>
 
-          {message && <p>{message}</p>}
+          {message && (
+            <div className="message">
+              {message}
+            </div>
+          )}
 
           {!student && !message && (
             <p>Loading progress...</p>
           )}
 
           {student && !progress && !message && (
-            <Card title="My Progress">
-              <p>No progress information available yet.</p>
-            </Card>
-          )}
+  <Card title="Progress Charts">
+    <p>No progress data available yet.</p>
 
+    <div className="progress-chart">
+      <ProgressBar
+        label="Academic Progress"
+        value={0}
+      />
+
+      <ProgressBar
+        label="Attendance"
+        value={0}
+      />
+
+      <ProgressBar
+        label="Goal Completion"
+        value={0}
+      />
+
+      <ProgressBar
+        label="Overall Progress"
+        value={0}
+      />
+    </div>
+  </Card>
+)}
           {progress && (
             <>
-              <Card title="Academic Progress">
-                <p>
-                  <strong>Academic Progress:</strong>{' '}
-                  {progress.academicProgress}%
-                </p>
-                <p>
-                  <strong>Attendance:</strong>{' '}
-                  {progress.attendancePercentage}%
-                </p>
-                <p>
-                  <strong>Goal Completion:</strong>{' '}
-                  {progress.goalCompletionPercentage}%
-                </p>
+              <Card title="Progress Charts">
+                <div className="progress-chart">
+                  <ProgressBar
+                    label="Academic Progress"
+                    value={progress.academicProgress}
+                  />
+
+                  <ProgressBar
+                    label="Attendance"
+                    value={progress.attendancePercentage}
+                  />
+
+                  <ProgressBar
+                    label="Goal Completion"
+                    value={progress.goalCompletionPercentage}
+                  />
+
+                  <ProgressBar
+                    label="Overall Progress"
+                    value={progress.overallProgress}
+                  />
+                </div>
               </Card>
 
-              <Card title="Overall Progress">
-                <p>
-                  <strong>Overall Progress:</strong>{' '}
-                  {progress.overallProgress}%
-                </p>
-                <p>
-                  <strong>Mentor Remarks:</strong>{' '}
-                  {progress.remarks || 'No remarks yet.'}
-                </p>
+              <Card title="Progress Details">
+                <div className="progress-details">
+                  <p>
+                    <strong>Academic Progress:</strong>{' '}
+                    {progress.academicProgress}%
+                  </p>
+
+                  <p>
+                    <strong>Attendance:</strong>{' '}
+                    {progress.attendancePercentage}%
+                  </p>
+
+                  <p>
+                    <strong>Goal Completion:</strong>{' '}
+                    {progress.goalCompletionPercentage}%
+                  </p>
+
+                  <p>
+                    <strong>Overall Progress:</strong>{' '}
+                    {progress.overallProgress}%
+                  </p>
+
+                  <p>
+                    <strong>Mentor Remarks:</strong>{' '}
+                    {progress.remarks || 'No remarks yet.'}
+                  </p>
+                </div>
               </Card>
             </>
           )}

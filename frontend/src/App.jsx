@@ -14,7 +14,7 @@ import Concerns from './pages/Concerns';
 import Meetings from './pages/Meetings';
 import Progress from './pages/Progress';
 import Feedback from './pages/feedback';
-
+import Notifications from './pages/Notifications';
 import AuthProvider from './context/AuthContext';
 
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -155,6 +155,14 @@ function App() {
   element={
     <ProtectedRoute>
       <Feedback />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/notifications"
+  element={
+    <ProtectedRoute>
+      <Notifications />
     </ProtectedRoute>
   }
 />
