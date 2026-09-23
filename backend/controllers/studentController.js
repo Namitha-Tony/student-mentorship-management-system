@@ -42,7 +42,29 @@ const assignMentor = asyncHandler(async (req, res) => {
   await student.save();
   res.json({ success: true, message: 'Mentor assignment updated successfully', data: await student.populate('mentor') });
 });
+const getMyStudent = asyncHandler(async (req, res) => {
+  const student = await Student.findOne({ user: req.user._id })
+    .populate('user', 'name email role')
+    .populate({
+      path: 'mentor',
+      populate: {
+        path: 'user',
+        select: 'name email'
+      }
+    });
 
+  if (!student) {
+    return res.status(404).json({
+      success: false,
+      message: 'Student profile not found'
+    });
+  }
+
+  res.json({
+    success: true,
+    data: student
+  });
+});
 const ensureStudentProfile = asyncHandler(async (req, res, next) => {
   if (req.user.role !== 'student') return next();
   const student = await findStudentForUser(req.user._id);
@@ -50,4 +72,12 @@ const ensureStudentProfile = asyncHandler(async (req, res, next) => {
   next();
 });
 
-module.exports = { getStudent, updateStudent, getStudentMentor, assignMentor, findStudentForUser, ensureStudentProfile };
+module.exports = {
+  getStudent,
+  getMyStudent,
+  updateStudent,
+  getStudentMentor,
+  assignMentor,
+  findStudentForUser,
+  ensureStudentProfile
+};

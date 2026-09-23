@@ -52,6 +52,11 @@ function Sidebar() {
         Progress
       </NavLink>
 
+      <NavLink to="/feedback">
+  Feedback
+</NavLink>
+
+
     </aside>
   );
 }

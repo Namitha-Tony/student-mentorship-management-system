@@ -13,6 +13,7 @@ import Goals from './pages/Goals';
 import Concerns from './pages/Concerns';
 import Meetings from './pages/Meetings';
 import Progress from './pages/Progress';
+import Feedback from './pages/feedback';
 
 import AuthProvider from './context/AuthContext';
 
@@ -149,6 +150,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/feedback"
+  element={
+    <ProtectedRoute>
+      <Feedback />
+    </ProtectedRoute>
+  }
+/>
 
         </Routes>
 
