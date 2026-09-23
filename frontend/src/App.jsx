@@ -8,8 +8,9 @@ import MentorDashboard from './pages/MentorDashboard';
 
 import MyMentor from './pages/MyMentor';
 import MyStudents from './pages/MyStudents';
-
+import MentorStudentProfile from './pages/MentorStudentProfile';
 import Goals from './pages/Goals';
+import Concerns from './pages/Concerns';
 import Meetings from './pages/Meetings';
 import Progress from './pages/Progress';
 
@@ -104,19 +105,33 @@ function App() {
               </RoleRoute>
             }
           />
-
+<Route
+  path="/my-students/:studentId"
+  element={
+    <RoleRoute role="mentor">
+      <MentorStudentProfile />
+    </RoleRoute>
+  }
+/>
 
           {/* Protected Pages */}
 
-          <Route
-            path="/goals"
-            element={
-              <ProtectedRoute>
-                <Goals />
-              </ProtectedRoute>
-            }
-          />
-
+<Route
+  path="/goals"
+  element={
+    <RoleRoute role="student">
+      <Goals />
+    </RoleRoute>
+  }
+/>
+<Route
+  path="/concerns"
+  element={
+    <RoleRoute role="student">
+      <Concerns />
+    </RoleRoute>
+  }
+/>
           <Route
             path="/meetings"
             element={

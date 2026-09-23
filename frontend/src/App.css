@@ -422,3 +422,186 @@ button {
     padding: 25px;
   }
 }
+/* =========================
+   GOALS & CONCERNS
+========================= */
+
+.goal-page,
+.concern-page {
+  padding: 32px;
+  background: #f4f4f4;
+  min-height: calc(100vh - 64px);
+}
+
+.goal-page h1,
+.concern-page h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  color: #111;
+}
+
+.goal-page > main > p,
+.concern-page > main > p {
+  color: #666;
+  margin-bottom: 28px;
+}
+
+/* Form cards */
+
+.goal-form-card,
+.concern-form-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.goal-form-card h2,
+.concern-form-card h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+/* Form layout */
+
+.goal-form,
+.concern-form {
+  display: grid;
+  gap: 18px;
+}
+
+.goal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.goal-form label,
+.concern-form label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: #222;
+}
+
+.goal-form input,
+.goal-form textarea,
+.goal-form select,
+.concern-form input,
+.concern-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+}
+
+.goal-form textarea,
+.concern-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.goal-form input:focus,
+.goal-form textarea:focus,
+.goal-form select:focus,
+.concern-form input:focus,
+.concern-form textarea:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* Buttons */
+
+.goal-form button,
+.concern-form button {
+  width: fit-content;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 7px;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.goal-form button:hover,
+.concern-form button:hover {
+  background: #333;
+}
+
+/* Section heading */
+
+.goal-section-title,
+.concern-section-title {
+  margin: 0 0 18px;
+  font-size: 22px;
+  color: #111;
+}
+
+/* Goal / concern cards */
+
+.goal-card,
+.concern-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.05);
+}
+
+.goal-card h3,
+.concern-card h3 {
+  margin: 0 0 14px;
+  color: #111;
+}
+
+.goal-card p,
+.concern-card p {
+  margin: 8px 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* Status */
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #eee;
+  color: #222;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Error / success message */
+
+.page-message {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background: #eee;
+  color: #222;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .goal-page,
+  .concern-page {
+    padding: 20px;
+  }
+
+  .goal-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

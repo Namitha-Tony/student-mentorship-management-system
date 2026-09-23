@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import Card from '../components/Card';
@@ -54,7 +55,7 @@ function MyStudents() {
           setMessage(data.message || 'Failed to load students');
         }
 
-      } catch (error) {
+      } catch {
         setMessage('Cannot connect to server');
       }
     };
@@ -88,10 +89,14 @@ function MyStudents() {
           )}
 
           {students.map((student) => (
-            <Card
-              key={student._id}
-              title={student.user.name}
-            >
+<Card
+  key={student._id}
+  title={
+    <Link to={`/my-students/${student._id}`}>
+      {student.user.name}
+    </Link>
+  }
+>
               <p>
                 <strong>Email:</strong> {student.user.email}
               </p>
