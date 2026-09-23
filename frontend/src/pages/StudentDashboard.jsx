@@ -31,7 +31,7 @@ function StudentDashboard() {
         } else {
           setMessage(data.message || 'Failed to load student information');
         }
-      } catch (error) {
+      } catch {
         setMessage('Cannot connect to server');
       }
     };
