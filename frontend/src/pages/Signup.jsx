@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -37,7 +36,7 @@ function Signup() {
     try {
 
       const response = await fetch(
-        'http://localhost:5000/api/auth/register',
+        'https://gs0mhz0f-5000.inc1.devtunnels.ms/api/auth/register',
         {
           method: 'POST',
           headers: {
@@ -87,6 +86,7 @@ function Signup() {
 
     } catch (error) {
 
+      console.error(error);
       setMessage('Cannot connect to server');
 
     }
@@ -160,3 +160,4 @@ function Signup() {
 }
 
 export default Signup;
+

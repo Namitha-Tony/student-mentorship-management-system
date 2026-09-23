@@ -1,7 +1,9 @@
+
 function Button({ children, onClick, type = 'button' }) {
 
   return (
     <button
+      className="common-button"
       type={type}
       onClick={onClick}
     >
@@ -11,3 +13,4 @@ function Button({ children, onClick, type = 'button' }) {
 }
 
 export default Button;
+
