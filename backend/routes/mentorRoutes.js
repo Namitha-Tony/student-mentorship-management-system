@@ -8,19 +8,18 @@ const protect = require('../middleware/authMiddleware');
 const {
   getMyMentor,
   getMentor,
-  getMentorStudents
+  getMentorStudents,
+  getAvailableStudents
 } = require('../controllers/mentorController');
-
 const validate = require('../middleware/validateMiddleware');
 
 const router = express.Router();
 
 
 router.use(protect);
-
-
 router.get('/me', getMyMentor);
 
+router.get('/available-students', getAvailableStudents);
 
 router.get(
   '/:id',

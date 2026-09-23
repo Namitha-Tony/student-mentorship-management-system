@@ -102,11 +102,33 @@ const getMentorStudents = asyncHandler(async (req, res) => {
   });
 
 });
+const getAvailableStudents = asyncHandler(async (req, res) => {
+  const mentor = await Mentor.findOne({ user: req.user._id });
 
+  if (!mentor) {
+    return res.status(404).json({
+      success: false,
+      message: 'Mentor profile not found'
+    });
+  }
+
+  const students = await Student.find({
+    $or: [
+      { mentor: null },
+      { mentor: { $ne: mentor._id } }
+    ]
+  }).populate('user', 'name email');
+
+  res.json({
+    success: true,
+    data: students
+  });
+});
 
 module.exports = {
   getMyMentor,
   getMentor,
-  getMentorStudents
+  getMentorStudents,
+  getAvailableStudents
 };
 
